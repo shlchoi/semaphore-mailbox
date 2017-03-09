@@ -1,0 +1,23 @@
+from gpiozero import LED
+from time import sleep
+import picamera
+
+led1 = LED(5)
+led2 = LED(6)
+led3 = LED(13)
+camera = picamera.PiCamera()
+camera.brightness = 60
+camera.resolution = (640, 480)
+camera.color_effects = (128, 128)
+
+led1.on()
+led2.on()
+led3.on()
+
+sleep(5)
+camera.capture('image1.jpg')
+
+sleep(3)
+led1.off()
+led2.off()
+led3.off()
