@@ -4,6 +4,7 @@ import picamera
 from requests import post
 from tsl2561 import TSL2561
 
+
 led1 = LED(5)
 led2 = LED(6)
 led3 = LED(13)
@@ -47,7 +48,4 @@ while var == 1:
                 print("Failure")
 
             var = 1
-
-
-
 
