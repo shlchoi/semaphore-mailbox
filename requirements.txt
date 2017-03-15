@@ -1,2 +1,3 @@
 gpiozero
 tsl2561
+enum

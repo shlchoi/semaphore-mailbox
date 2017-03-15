@@ -14,8 +14,9 @@ led_5 = LED(5)
 led_6 = LED(6)
 led_13 = LED(13)
 luminosity_sensor = TSL2561(debug=1)
-luminosity_button = Button(12)
-calibrate_button = Button(16)
+idle_light = LED(17)
+calibrate_light = LED(27)
+calibrate_button = Button(16, pull_up=True)
 url = ''
 mailbox_id = ''
 
@@ -41,6 +42,7 @@ def load_config(config_path):
 
 
 def take_picture(filename):
+    sleep(3)
     led_5.on()
     led_6.on()
     led_13.on()
@@ -56,7 +58,7 @@ def read_luminosity():
 
 
 def read_calibrate():
-    return calibrate_button.is_pressed
+    return not calibrate_button.is_pressed
 
 
 def send_snapshot():
@@ -65,7 +67,8 @@ def send_snapshot():
     files = {'snapshot': open('snapshot.jpg')}
     data = {'mailbox': mailbox_id}
 
-    # r = post(endpoint, headers=headers, data=data, files=files)
+    r = post(endpoint, headers=headers, data=data, files=files)
+    return r.status_code == 200
 
 
 def send_calibration():
@@ -74,7 +77,8 @@ def send_calibration():
     files = {'snapshot': open('calibrate.jpg')}
     data = {'mailbox': mailbox_id}
 
-    # r = post(endpoint, headers=headers, data=data, files=files)
+    r = post(endpoint, headers=headers, data=data, files=files)
+    return r.status_code == 200
 
 
 def main():
@@ -84,7 +88,7 @@ def main():
     camera.color_effects = (128, 128)
 
     print(url)
-    
+    idle_light.on()    
     state = State.IDLE
     while True:
         calibrate = read_calibrate()
@@ -108,20 +112,36 @@ def main():
         elif state == State.CLOSED:
             # mailbox has been closed, do stuff here
             take_picture('snapshot.jpg')
-            send_snapshot()
+            result = send_snapshot()
+            if result:
+                idle_light.on()
+                calibrate_light.off()
+            else:
+                idle_light.off()
+                calibrate_light.on()
             print("State: IDLE")
             state = State.IDLE
         elif state == State.CALIBRATE_IDLE:
+            calibrate_light.on()
+            idle_light.on()
             if luminosity:
                print("State: CALIBRATE_OPEN")
                state = State.CALIBRATE_OPEN
         elif state == State.CALIBRATE_OPEN:
+            calibrate_light.on()
+            idle_light.on()
             if not luminosity:
                print("State: CALIBRATE_CLOSED")
                state = State.CALIBRATE_CLOSED
         elif state == State.CALIBRATE_CLOSED:
             take_picture('calibrate.jpg')
-            send_calibration()
+            result = send_calibration()
+            if result:
+               calibrate_light.off()
+               idle_light.on()
+            else:
+               calibrate_light.on()
+               idle_light.off()
             print("State: IDLE")
             state = State.IDLE
 
