@@ -87,7 +87,6 @@ def main():
     camera.resolution = (640, 480)
     camera.color_effects = (128, 128)
 
-    print(url)
     idle_light.on()    
     state = State.IDLE
     while True:
@@ -109,6 +108,7 @@ def main():
             elif not luminosity:
                 print("State: CLOSED")
                 state = State.CLOSED
+                idle_light.blink()
         elif state == State.CLOSED:
             # mailbox has been closed, do stuff here
             take_picture('snapshot.jpg')
@@ -133,6 +133,8 @@ def main():
             if not luminosity:
                print("State: CALIBRATE_CLOSED")
                state = State.CALIBRATE_CLOSED
+               calibrate_light.blink()
+               idle_light.blink()
         elif state == State.CALIBRATE_CLOSED:
             take_picture('calibrate.jpg')
             result = send_calibration()
