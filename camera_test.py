@@ -2,6 +2,8 @@ from gpiozero import LED
 from time import sleep
 import picamera
 
+image_name = '2l_{}.jpg'
+num_pictures = 3
 led1 = LED(5)
 led2 = LED(6)
 led3 = LED(13)
@@ -15,7 +17,8 @@ led2.on()
 led3.on()
 
 sleep(5)
-camera.capture('image1.jpg')
+for i in range(num_pictures):
+    camera.capture(image_name.format(i))
 
 sleep(3)
 led1.off()
