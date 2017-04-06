@@ -29,8 +29,8 @@ luminosity_sensor = TSL2561(debug=1)
 idle_light = LED(17)
 calibrate_light = LED(27)
 calibrate_button = Button(16, pull_up=True)
-url = '104.196.142.49:8080'
-mailbox_id = "temp_fd5c7ba5-c2db-4923-8075-046cbead8173"
+url = '0.0.0.0:8080'
+mailbox_id = ''
 luminosity_button = Button(12)
 
 
@@ -108,7 +108,7 @@ def send_calibration():
 
 
 def main():
-    print("Copyright (C) 2017 Samson H. Choi, Matthew Chum")
+    print("Copyright (C) 2017 Samson H. Choi, Matthew Leung")
     print("This program comes with ABSOLUTELY NO WARRANTY")
     print("This is free software, and you are welcome to redistribute it under certain conditions")
 
