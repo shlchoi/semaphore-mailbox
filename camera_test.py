@@ -1,9 +1,20 @@
+"""
+ Semaphore - Mailbox
+ Mailbox Device component of Semaphore
+ See https://shlchoi.github.io/semaphore/ for more information about Semaphore
+
+ camera_test.py
+ Copyright (C) 2017 Matthew Leung, Samson H. Choi
+
+ See https://github.com/shlchoi/semaphore-mailbox/blob/master/LICENSE for license information
+ """
+
 from gpiozero import LED
 from time import sleep
 import picamera
 
-image_name = '2l_{}.jpg'
-num_pictures = 3
+image_name = 'empty_{}.jpg'
+num_pictures = 1
 led1 = LED(5)
 led2 = LED(6)
 led3 = LED(13)
