@@ -108,7 +108,11 @@ def send_calibration():
 
 
 def main():
-    load_config('~/semaphore-mailbox/config')
+    print("Copyright (C) 2017 Samson H. Choi, Matthew Chum")
+    print("This program comes with ABSOLUTELY NO WARRANTY")
+    print("This is free software, and you are welcome to redistribute it under certain conditions")
+
+    load_config('config')
     camera.brightness = 60
     camera.resolution = (640, 480)
     camera.color_effects = (128, 128)
