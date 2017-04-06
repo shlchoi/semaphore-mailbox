@@ -9,7 +9,7 @@ from json import load
 from requests import post
 
 
-debug = True
+debug = False
 camera = PiCamera()
 led_5 = LED(5)
 led_6 = LED(6)
@@ -18,8 +18,8 @@ luminosity_sensor = TSL2561(debug=1)
 idle_light = LED(17)
 calibrate_light = LED(27)
 calibrate_button = Button(16, pull_up=True)
-url = ''
-mailbox_id = ''
+url = '104.196.142.49:8080'
+mailbox_id = "temp_fd5c7ba5-c2db-4923-8075-046cbead8173"
 luminosity_button = Button(12)
 
 
@@ -43,13 +43,20 @@ def load_config(config_path):
         mailbox_id = config['mailbox_id']
 
 
-def take_picture(filename):
+def take_picture(filename, num_pictures=1):
     sleep(3)
     led_5.on()
     led_6.on()
     led_13.on()
-    sleep(3)
-    camera.capture(filename)
+    sleep(2)
+
+    for i in range(num_pictures):
+        sleep(1)
+        if num_pictures == 1:
+            camera.capture(filename)
+        else:
+            camera.capture(filename.format(i))
+
     led_5.off()
     led_6.off()
     led_13.off()
@@ -60,8 +67,7 @@ def read_luminosity():
 
 
 def read_calibrate():
-    #return not calibrate_button.is_pressed
-    return calibrate_button.is_pressed
+    return not calibrate_button.is_pressed
 
 
 def send_snapshot():
@@ -80,7 +86,7 @@ def send_snapshot():
 def send_calibration():
     endpoint = 'http://{}/calibrate'.format(url)
     headers = {'enctype': 'multipart/form-data'}
-    files = {'snapshot': open('calibrate.jpg')}
+    files = {'calibrate_0': open('calibrate_0.jpg'), 'calibrate_1': open('calibrate_1.jpg')}
     data = {'mailbox': mailbox_id}
 
     if debug:
@@ -91,7 +97,7 @@ def send_calibration():
 
 
 def main():
-    load_config('config')
+    load_config('~/semaphore-mailbox/config')
     camera.brightness = 60
     camera.resolution = (640, 480)
     camera.color_effects = (128, 128)
@@ -117,7 +123,7 @@ def main():
             elif not luminosity:
                 print("State: CLOSED")
                 state = State.CLOSED
-                idle_light.blink()
+                idle_light.blink(0.5, 0.5)
         elif state == State.CLOSED:
             # mailbox has been closed, do stuff here
             take_picture('snapshot.jpg')
@@ -142,10 +148,10 @@ def main():
             if not luminosity:
                print("State: CALIBRATE_CLOSED")
                state = State.CALIBRATE_CLOSED
-               calibrate_light.blink()
-               idle_light.blink()
+               calibrate_light.blink(0.5, 0.5)
+               idle_light.blink(0.5, 0.5)
         elif state == State.CALIBRATE_CLOSED:
-            take_picture('calibrate.jpg')
+            take_picture('calibrate_{}.jpg', 2)
             result = send_calibration()
             if result:
                calibrate_light.off()

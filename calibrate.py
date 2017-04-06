@@ -41,7 +41,7 @@ def take_picture(filename):
 def send_calibration():
     endpoint = 'http://{}/calibrate'.format(url)
     headers = {'enctype': 'multipart/form-data'}
-    files = {'snapshot': open('calibrate.jpg')}
+    files = {'calibrate_0': open('calibrate_0.jpg', 'calibrate_1': open('calibrate_1.jpg)}
     data = {'mailbox': mailbox_id}
 
     r = post(endpoint, headers=headers, data=data, files=files)
@@ -53,7 +53,9 @@ def main():
     camera.resolution = (640, 480)
     camera.color_effects = (128, 128)
 
-    take_picture('calibrate.jpg')
+    take_picture('calibrate_0.jpg')
+    sleep(1)
+    take_picture('calibrate_1.jpg')
     result = send_calibration()
 
 

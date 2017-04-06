@@ -2,8 +2,8 @@ from gpiozero import LED
 from time import sleep
 import picamera
 
-image_name = '2l_{}.jpg'
-num_pictures = 3
+image_name = 'empty_{}.jpg'
+num_pictures = 1
 led1 = LED(5)
 led2 = LED(6)
 led3 = LED(13)

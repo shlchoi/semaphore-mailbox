@@ -9,7 +9,7 @@ led1.on()
 led2.on()
 led3.on()
 
-sleep(10)
+sleep(300)
 
 led1.off()
 led2.off()
