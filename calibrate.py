@@ -1,3 +1,14 @@
+"""
+ Semaphore - Mailbox
+ Mailbox Device component of Semaphore
+ See https://shlchoi.github.io/semaphore/ for more information about Semaphore
+
+ calibrate.py
+ Copyright (C) 2017 Samson H. Choi, Matthew Leung
+
+ See https://github.com/shlchoi/semaphore-mailbox/blob/master/LICENSE for license information
+ """
+
 from gpiozero import LED, Button
 from picamera import PiCamera
 from requests import post
@@ -41,7 +52,7 @@ def take_picture(filename):
 def send_calibration():
     endpoint = 'http://{}/calibrate'.format(url)
     headers = {'enctype': 'multipart/form-data'}
-    files = {'calibrate_0': open('calibrate_0.jpg', 'calibrate_1': open('calibrate_1.jpg)}
+    files = {'calibrate_0': open('calibrate_0.jpg'), 'calibrate_1': open('calibrate_1.jpg')}
     data = {'mailbox': mailbox_id}
 
     r = post(endpoint, headers=headers, data=data, files=files)
